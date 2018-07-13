@@ -1,0 +1,23 @@
+4 6
+Apple 1
+Pear 2
+Juice 4
+OkCard 5
+Apple 5
+Pear 6
+OkCard 0
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+const int N=10;
+int a[N];
+
+int m
+1 1 2 2
+3 2 2 3
+1 2 2 2
+Car 100000
+Plane 1000000
+
+
