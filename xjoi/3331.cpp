@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
-const int N=1010;
+const int N=8001;
 vector<int> a[N];
 int dis[N],b[N];
 
@@ -13,9 +13,9 @@ int read(){
 }
 
 int main(){
-	int n=read();
+	int n=read(),m=read();
 	memset(dis,0x3f,sizeof(dis));
-	for(int i=2;i<=n;++i){
+	for(int i=1;i<=m;++i){
 		int x=read(),y=read();
 		a[x].push_back(y);
 		a[y].push_back(x);
@@ -26,14 +26,13 @@ int main(){
 		int k=0;
 		for(int j=1;j<=n;++j)
 			if(!b[j]&&dis[j]<dis[k]) k=j;
-		if(!k) break;
 		b[k]=1;
-		for(int j=0;j<a[k].size();++j){
-			if(a[k][j]){
-				if(!b[a[k][j]]) dis[a[k][j]]=min(dis[a[k][j]],dis[k]+1);
-			}
-		}
+		if(k==0) break; 
+		for(int j=0;j<a[k].size();++j)
+			if(!b[a[k][j]]) dis[a[k][j]]=min(dis[a[k][j]],dis[k]+1);
 	}
-	printf("%d",dis[t]);
+	//printf("%d\n",dis[t]);
+	if(dis[t]>=0x3f) printf("-1");
+	else printf("%d",dis[t]);
 	return 0;
 }

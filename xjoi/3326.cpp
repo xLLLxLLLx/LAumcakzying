@@ -1,9 +1,8 @@
-#include<iostream>
-#include<cstdio>
+#include<bits/stdc++.h>
 using namespace std;
 const int N=100001;
-int f[N],d[N],a[N];
-int ans=0;
+int f[N],d[N];
+vector<int> a[N];
 
 int read(){
 	int x=0,k=0;char ch=getchar();
@@ -15,21 +14,20 @@ int read(){
 
 int main(){
 	int n=read();
-	for(int i=1;i<n;++i){
+	for(int i=2;i<=n;++i){
 		int x=read();
-		a[i+1]=x;
-		//a[x][++a[x][0]%70]=i+1;
+		a[x].push_back(i);
 	}
-	int l=0,r=2;
-	f[1]=1;
-	d[1]=1;
-	while(l++<r-1){
-		int h=f[l],flag=0;
-		for(int i=1;i<=n;++i){
-			if(a[i]==h){
+	f[1]=1;d[1]=1;
+	int b=0,e=2;
+	int ans=0;
+	while(b++<e-1){
+		int h=f[b],flag=0;
+		for(int i=0;i<a[h].size();++i){
+			if(a[h][i]){
 				flag=1;
-				d[i]=d[l]+1;
-				f[r++]=i;
+				f[e++]=a[h][i];
+				d[a[h][i]]=d[h]+1;
 			}
 		}
 		if(!flag) ans=max(ans,d[h]);

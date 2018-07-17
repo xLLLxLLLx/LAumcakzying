@@ -1,42 +1,46 @@
-#include<iostream>
-#include<cstdio>
-#include<cstring>
+#include<bits/stdc++.h>
+#define LL long long
 using namespace std;
-int s,t,n,m;
-int xt[1001],dis[1001],a[1001][1001];
-int b[1001]={0};
+const int N=27;
+const int dx[8]={-2,-2,-1,-1,1,1,2,2};
+const int dy[8]={-1,1,-2,2,-2,2,-1,1};
+int n,m,b[N][N],c[N],d[N],cnt;
 
-int read(){
-    int x=0,f=0;char ch=getchar();
-    for(;ch<'0'||ch>'9';ch=getchar()) f|=(ch=='-');
-    for(;ch>='0'&&ch<='9';ch=getchar()) x=(x<<1)+(x<<3)+(ch^48);
-    x=f?-x:x;
-    return x;
+void read(int &x){
+	char ch=getchar();x=0;int w=1;
+	for(;ch<'0'||ch>'9';ch=getchar()) if (ch=='-') w=-1;
+	for(;ch>='0'&&ch<='9';ch=getchar()) x=(x<<3)+(x<<1)+ch-'0';
+	x*=w;
+}
+
+void dfs(int x,int y){
+	if (cnt==n*m){
+		for(int i=1;i<=cnt;i++) printf("%c%d",c[i]+'A'-1,d[i]);
+		exit(0);
+	}
+	cnt++;
+	for(int i=0;i<8;i++){
+		int xx=x+dx[i],yy=y+dy[i];
+		if (xx>0&&xx<=n&&yy>0&&yy<=m&&b[xx][yy]==0){
+			printf("%d %d\n",xx,yy);
+			b[xx][yy]=1;
+			c[cnt]=xx;d[cnt]=yy;
+			dfs(xx,yy);
+			b[xx][yy]=0;
+		}
+	}
+	cnt--;
+	/*printf("impossible");
+	exit(0);*/
 }
 
 int main(){
-    s=read();t=read();n=read();m=read();
-    memset(a,0x3f,sizeof a);//
-    memset(dis,0x3f,sizeof dis);//初始化
-    dis[t]=0;//
-    for(int i=1;i<=n;++i) xt[i]=n+1;
-    for(int i=1;i<=m;++i){
-        int x=read(),y=read(),z=read();
-        if(a[x][y]>z) a[x][y]=z,a[y][x]=z;//记录边权
-    }
-    for(int i=1;i<=n;++i){//直到把所有点放入 每次一个点
-        int k=0;
-        for(int j=1;j<=n;++j)
-            if(b[j]==0&&dis[j]<=dis[k]) k=j;
-        b[k]=1;//放入集合
-        for(int j=1;j<=n;++j){
-            if(b[j]==0&&dis[k]+a[j][k]<dis[j]){//如果j没有被访问到
-                dis[j]=dis[k]+a[j][k];
-                xt[j]=k;
-            } else if(dis[k]+a[j][k]==dis[j]&&j<=k) xt[j]=k;
-        }
-    }
-    printf("%d\n",dis[s]);
-    for(int i=s;i<=n;i=xt[i]) printf("%d ",i);
-    return 0;
+	read(m);read(n);
+	cnt=1;
+	c[1]=1;d[1]=1;
+	b[1][1]=1;
+	dfs(1,1);
+	printf("impossible");
+	return 0;
 }
+
