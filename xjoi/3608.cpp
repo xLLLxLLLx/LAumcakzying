@@ -4,14 +4,11 @@ const int N=510;
 int a[N],b[N],f[N];
 
 int read(){
-	/*int x=0,w=0;char ch=getchar();
-	for(;ch<'0'||ch>'9';ch=getchar()) w|=(ch=='-');
-	for(;ch>='0'&&ch<='9';ch=getchar()) x=(x<<1)+(x<<3)+(ch^48);
-	x=w?-x:x;
-	return x;*/
-	int x;
-	scanf("%d",&x);
-	return x;
+    int x=0,f=0;char ch=getchar();
+    for(;ch<'0'||ch>'9';ch=getchar())f|=(ch=='-');
+    for(;ch>='0'&&ch<='9';ch=getchar())x=(x<<1)+(x<<3)+(ch^48);
+    x=f? -x:x;
+    return x;
 }
 
 int main(){

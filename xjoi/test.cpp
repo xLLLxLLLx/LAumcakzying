@@ -1,64 +1,73 @@
-#include<iostream>
-#include<algorithm>
-#include<cstring>
-#include<cstdio>
-#define maxn 100010
+#include <algorithm>
+#include <iostream>
+#include <stdlib.h>
+#include <string.h>
+#include <iomanip>
+#include <stdio.h>
+#include <string>
+#include <queue>
+#include <cmath>
+#include <stack>
+#include <map>
+#include <set>
+#define eps 1e-7
+#define M 1000100
+#define LL __int64
+//#define LL long long
+#define INF 0x3f3f3f3f
+#define PI 3.1415926535898
+ 
 using namespace std;
-
-int n, m;
-int pre[maxn];
-int use[40];
-
-struct node {
-    int a, b, c;
-    bool operator < (const node& rhs) const {  
-        return c < rhs.c;  
-    } 
-}cnt[maxn];
-
-int find(int x) {
-    return pre[x] == x ? x : pre[x] =  find(pre[x]);
-}
-
-bool kruskal() {
-    int num = 1, ans1 = 0, ans2 = 0;
-    for(int i = 1; i <= n; i++) pre[i] = i;
-    sort(cnt, cnt+m);
-    for(int i = 0; i < m; i++) {
-        int x = find(cnt[i].a);
-        int y = find(cnt[i].b);
-        if(x != y) {
-            pre[y] = x;
-            num++;
-            ans1 += cnt[i].c;
-        }
+ 
+const int maxn = 5000010;
+ 
+int dp[30][30][30][30];
+int num1[30], num2[30];
+int cnt1[30], cnt2[30];
+int dfs(int l1, int r1, int l2, int r2)
+{
+    if(dp[l1][r1][l2][r2] != 0)
+        return dp[l1][r1][l2][r2];
+    int sum = (cnt1[r1]-cnt1[l1-1]) + (cnt2[r2]-cnt2[l2-1]);
+    if(l1 > r1 && l2 > r2)
+        return 0;
+    if(l1 > r1)
+    {
+        dp[l1][r1][l2][r2] = sum - min(dfs(l1, r1, l2+1, r2), dfs(l1, r1, l2, r2-1));
+        return dp[l1][r1][l2][r2];
     }
-    if(num != n) return false;
-    for(int i = 1; i <= n; i++) pre[i] = i;
-    for(int i = m-1; i >= 0; i--) {
-        int x = find(cnt[i].a);
-        int y = find(cnt[i].b);
-        if(x != y) {
-            pre[y] = x;
-            ans2 += cnt[i].c;
-        }
+    if(l2 > r2)
+    {
+        dp[l1][r1][l2][r2] = sum - min(dfs(l1+1, r1, l2, r2), dfs(l1, r1-1, l2, r2));
+        return dp[l1][r1][l2][r2];
     }
-    for(int i = 1; i <= 26; i++) 
-        if(ans1 <= use[i] && use[i] <= ans2) return true;
-    return false;
+    dp[l1][r1][l2][r2] = sum-(min(dfs(l1+1, r1, l2, r2),min(dfs(l1, r1-1, l2, r2), min(dfs(l1, r1, l2+1, r2), dfs(l1, r1, l2, r2-1)))));
+    return dp[l1][r1][l2][r2];
 }
-
-void init() {
-    use[1] = 1, use[2] = 2;
-    for(int i = 3; i <= 26; i++) use[i] = use[i-1] + use[i-2];
-}
-
-int main() {
-    init();
-    int t, kase = 1;
-    scanf("%d %d" , &n, &m);
-    for(int i = 0; i < m; i++) scanf("%d %d %d", &cnt[i].a, &cnt[i].b, &cnt[i].c);
-    if(kruskal()) printf("Yes\n");
-    else printf("No\n");
+ 
+int main()
+{
+    int T;
+    cin >>T;
+    while(T--)
+    {
+        int n;
+        cin >>n;
+        memset(dp, 0, sizeof(dp));
+        memset(cnt1, 0, sizeof(cnt1));
+        memset(cnt2, 0, sizeof(cnt2));
+        for(int i = 1; i <= n; i++)
+            cin >>num1[i];
+        for(int i = 1; i <= n; i++)
+            cin >>num2[i];
+        for(int i = 1; i <= n; i++)
+        {
+           cnt1[i] += cnt1[i-1]+num1[i];
+           cnt2[i] += cnt2[i-1]+num2[i];
+        }
+        dfs(1, n, 1, n);
+        cout<<dp[1][n][1][n]<<endl;
+    }
     return 0;
-} 
+}
+
