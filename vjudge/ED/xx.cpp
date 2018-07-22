@@ -1,56 +1,51 @@
-#include<cstdio>
-#include<cstring>
+#include<stdio.h>
+#include<string.h>
+#include<algorithm>
+#include<math.h>
 using namespace std;
-int n,m,cnt,a,b;
-int head[1001],d[1001],q[1001];
-int dis[1001][1001],p[1001][1001];
-double f[1001][1001];
-struct data{int to,next;}e[1001];
-void insert(int u,int v)
+struct node
 {
-    cnt++;e[cnt].to=v;e[cnt].next=head[u];head[u]=cnt;d[u]++;
-    cnt++;e[cnt].to=u;e[cnt].next=head[v];head[v]=cnt;d[v]++;
-}
-double dp(int x,int y)
+    int x,y,t;
+    double val;
+}a[1515];
+double dp[1515];
+int cmp(node a,node b)
 {
-    if(f[x][y])return f[x][y];
-    if(x==y)return 0;
-    if(p[x][y]==y||p[p[x][y]][y]==y)return f[x][y]=1;
-    double tot=dp(p[p[x][y]][y],y);
-    for(int i=head[y];i;i=e[i].next)
-        tot+=dp(p[p[x][y]][y],e[i].to);
-    return f[x][y]=tot/(d[y]+1)+1;
-}
-void bfs(int x)
-{
-    int t=0,w=1;
-    q[0]=x;dis[x][x]=0;
-    while(t!=w)
-    {
-        int now=q[t],tmp=p[x][now];t++;if(t==1001)t=0;
-        for(int i=head[now];i;i=e[i].next)
-            if(dis[x][e[i].to]==-1||(1+dis[x][now]==dis[x][e[i].to]&&tmp<p[x][e[i].to]))
-            {
-                dis[x][e[i].to]=dis[x][now]+1;
-                p[x][e[i].to]=tmp;
-                if(!tmp)p[x][e[i].to]=e[i].to;
-                q[w]=e[i].to;
-                w++;
-                if(w==1001)w=0;
-            }
-    }
+    return a.t<b.t;
 }
 int main()
 {
-    memset(dis,-1,sizeof(dis));
-    scanf("%d%d",&n,&m);
-    scanf("%d%d",&a,&b);
-    for(int i=1;i<=m;i++)
+    int n;
+    while(~scanf("%d",&n))
     {
-        int u,v;scanf("%d%d",&u,&v);
-        insert(u,v);
+        for(int i=0;i<n;i++)
+        {
+            scanf("%d%d%d%lf",&a[i].x,&a[i].y,&a[i].t,&a[i].val);
+        }
+        sort(a,a+n,cmp);
+        memset(dp,0,sizeof(dp));
+        for(int i=0;i<n;i++)
+        {
+            dp[i]=a[i].val;
+            for(int j=0;j<i;j++)
+            {
+                long long int t1=(a[i].t-a[j].t);
+                t1*=(a[i].t-a[j].t);
+                long long int tmp1=(a[i].x-a[j].x);
+                long long int tmp2=(a[i].y-a[j].y);
+                long long int t2=tmp1*tmp1+tmp2*tmp2;
+                if(t1>=t2)
+                {
+                    dp[i]=max(dp[i],dp[j]+a[i].val);
+                }
+            }
+        }
+        double output=0;
+        for(int i=0;i<n;i++)
+        {
+            output=max(output,dp[i]);
+        }
+        printf("%lf\n",output);
     }
-    for(int i=1;i<=n;i++)bfs(i);
-    printf("%.3lf",dp(a,b));
-    return 0;
 }
+
